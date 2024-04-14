@@ -12,19 +12,16 @@ end
 
 -- Toggles the note window on and off
 function M.toggle()
-  nm:DbInit()
   nm:Toggle()
 end
 
 -- Search note by path/content
 function M.search()
-  nm:DbInit()
   nm:Search()
 end
 
 -- Manage notes
 function M.manage()
-  nm:DbInit()
   nm:Manage()
 end
 

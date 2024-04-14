@@ -1,6 +1,7 @@
 local A = vim.api
-local N = require("n.note")
-local P = require("plenary.path")
+local DB = require("n.db")
+local Note = require("n.note")
+local Path = require("plenary.path")
 
 local NoteManager = {}
 
@@ -12,7 +13,7 @@ local function default_db_path()
 
   -- create db dir if required.
   local dbpath = xdgData .. "/nvim/notes/notes.db"
-  P:new(dbpath):parent():mkdir({ parents = true })
+  Path:new(dbpath):parent():mkdir({ parents = true })
   return dbpath
 end
 
@@ -45,6 +46,16 @@ end
 
 -- Toggle the notes window
 function NoteManager:Toggle()
+  self:db_init()
+
+  if self.note == nil then
+    self.note = Note:new({
+      db = self.db,
+      path = vim.loop.cwd(),
+    })
+    self.note:load()
+  end
+
   if self.win and A.nvim_win_is_valid(self.win) then
     -- save current buf
     self.note:save(self.buf)
@@ -60,14 +71,10 @@ function NoteManager:Toggle()
   end
 end
 
--- DbInit initializes the database if needed
-function NoteManager:DbInit()
-  if self.note == nil then
-    self.note = N:new({
-      dbpath = self.config.db,
-      path = vim.loop.cwd(),
-    })
-    self.note:load()
+-- db_init initializes the database if needed
+function NoteManager:db_init()
+  if self.db == nil then
+    self.db = DB:init(self.config.dbpath)
   end
 end
 
@@ -113,11 +120,15 @@ end
 
 -- NotImpelementedError
 function NoteManager:Search()
+  self:db_init()
+
   print("search not implemented")
 end
 
 -- NotImpelementedError
 function NoteManager:Manage()
+  self:db_init()
+
   print("manage not implemented")
 end
 
