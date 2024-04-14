@@ -1,10 +1,23 @@
 local A = vim.api
 local N = require("n.note")
+local P = require("plenary.path")
 
 local NoteManager = {}
 
+function default_db_path()
+  local xdgData = os.getenv("XDG_DATA_HOME")
+  if xdgData == nil then
+    xdgData = vim.loop.os_homedir() .. "/.local/share"
+  end
+
+  -- create db dir if required.
+  local dbpath = xdgData .. "/nvim/notes/notes.db"
+  P:new(dbpath):parent():mkdir({ parents = true })
+  return dbpath
+end
+
 local defaults = {
-  db = "~/notes.db",
+  db = default_db_path(),
   -- ref: https://neovim.io/doc/user/api.html#api-win_config
   border = "rounded",
   ft = "markdown",
