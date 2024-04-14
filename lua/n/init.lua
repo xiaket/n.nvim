@@ -1,25 +1,28 @@
-local Note = require("n.note")
+local NoteManager = require("n.note_manager")
 local api = vim.api
 
 local M = {}
 
-local t = Note:New()
+local nm = NoteManager:New()
 
 function M.setup(cfg)
-  t:Setup(cfg)
+  nm:Setup(cfg)
 end
 
 ---Toggles the default terminal
 function M.toggle()
-  t:Toggle()
+  nm:DbInit()
+  nm:Toggle()
 end
 
 function M.search()
-  t:Search()
+  nm:DbInit()
+  nm:Search()
 end
 
 function M.manage()
-  t:Manage()
+  nm:DbInit()
+  nm:Manage()
 end
 
 return M
