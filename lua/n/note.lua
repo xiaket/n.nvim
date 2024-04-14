@@ -1,6 +1,16 @@
 local A = vim.api
 local Note = {}
 
+-- split the content into lines, handles empty lines
+local function split_by_newline(str)
+  local t = {}
+  -- Match all lines including empty ones
+  for line in (str .. "\n"):gmatch("(.-)\n") do
+    table.insert(t, line)
+  end
+  return t
+end
+
 function Note:new(opts)
   return setmetatable({
     -- content should be a string.
@@ -23,16 +33,6 @@ function Note:load()
   self.id = note.id
   self.content = note.content
   return split_by_newline(self.content)
-end
-
--- split the content into lines, handles empty lines
-local function split_by_newline(str)
-  local t = {}
-  -- Match all lines including empty ones
-  for line in (str .. "\n"):gmatch("(.-)\n") do
-    table.insert(t, line)
-  end
-  return t
 end
 
 return Note
