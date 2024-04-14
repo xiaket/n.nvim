@@ -4,7 +4,7 @@ local P = require("plenary.path")
 
 local NoteManager = {}
 
-function default_db_path()
+local function default_db_path()
   local xdgData = os.getenv("XDG_DATA_HOME")
   if xdgData == nil then
     xdgData = vim.loop.os_homedir() .. "/.local/share"
@@ -45,7 +45,7 @@ end
 
 -- Toggle the notes window
 function NoteManager:Toggle()
-  if self.win and vim.api.nvim_win_is_valid(self.win) then
+  if self.win and A.nvim_win_is_valid(self.win) then
     -- save current buf
     self.note:save(self.buf)
     -- If window is stored and valid then it is already opened, close it.
@@ -53,8 +53,8 @@ function NoteManager:Toggle()
     self.win = nil
   else
     -- Get or create a buffer and open a window.
-    buf = self:get_or_create_buf()
-    self.win = A.nvim_open_win(buf, true, self:buf_cfg())
+    self:get_or_create_buf()
+    self.win = A.nvim_open_win(self.buf, true, self:buf_cfg())
 
     A.nvim_win_set_option(self.win, "winhl", ("Normal:%s"):format(self.config.hl))
   end
@@ -109,16 +109,14 @@ function NoteManager:get_or_create_buf()
     -- setup filetype for syntax highlighting
     A.nvim_buf_set_option(self.buf, "filetype", self.config.ft)
   end
-
-  return self.buf
 end
 
--- Toggle the notes window, everytime we
+-- NotImpelementedError
 function NoteManager:Search()
   print("search not implemented")
 end
 
--- Toggle the notes window, everytime we
+-- NotImpelementedError
 function NoteManager:Manage()
   print("manage not implemented")
 end

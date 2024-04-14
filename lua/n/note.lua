@@ -3,9 +3,9 @@ local S = require("sqlite")
 
 local Note = {}
 
-function Note:new(args)
+function Note:new(opts)
   local db = S({
-    uri = args.dbpath,
+    uri = opts.dbpath,
     notes = {
       id = true,
       content = { "text", required = true },
@@ -17,7 +17,7 @@ function Note:new(args)
   return setmetatable({
     content = nil,
     id = nil,
-    path = args.path,
+    path = opts.path,
     updated_at = nil,
     db = db,
   }, { __index = self })
@@ -50,7 +50,8 @@ function Note:load()
   return {}
 end
 
-function splitByNewline(str)
+-- split the content into lines, handles empty lines
+local function splitByNewline(str)
   local t = {}
   -- Match all lines including empty ones
   for line in (str .. "\n"):gmatch("(.-)\n") do
