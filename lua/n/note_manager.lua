@@ -108,13 +108,21 @@ end
 function NoteManager:get_or_create_buf()
   if self.buf == nil then
     -- do not show up in buffer list
-    -- this is not a scratch buffer
+    -- this is a scratch buffer
     self.buf = A.nvim_create_buf(false, true)
+
     -- Load content from db
     A.nvim_buf_set_text(self.buf, 0, 0, 0, 0, self.note:load())
 
     -- setup filetype for syntax highlighting
     A.nvim_buf_set_option(self.buf, "filetype", self.config.ft)
+
+    A.nvim_create_autocmd({ "InsertLeave", "BufLeave", "FocusLost", "UILeave" }, {
+      pattern = { string.format("<buffer=%s>", self.buf) },
+      callback = function(ev)
+        self.note:save(self.buf)
+      end,
+    })
   end
 end
 
